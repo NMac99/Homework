@@ -1,17 +1,17 @@
 class MySquareIterator:                                             
-    def __init__(self, collection):                                 # stanum a Iterable (list, tuple)
-        self.collection = collection                                # pahum a objecti vra
-        self.index = -1                                             # eli skizby dnum a -1-i vra
+    def __init__(self, collection):
+        self.collection = collection
+        self.index = -1
 
-    def __iter__(self):                                             # esi Iterable-i paddzerjken a
+    def __iter__(self):
         return self
 
-    def __next__(self):                                             # amen hajord tary vercnelu paddzerjken a
-        if self.index < len(self.collection) - 1:                   # qani der durs chi ekel sahmanic
+    def __next__(self):
+        if self.index < len(self.collection) - 1:
             self.index += 1
-            return self.collection[self.index] ** 2                 # veradarcnum a arjeqi qarakusin
+            return self.collection[self.index] ** 2
         else:
-            raise StopIteration                                     # henc durs a galis, kaynacnum a ira vra fraly
+            raise StopIteration
 
 itr = MySquareIterator([1, 2, 3, 4, 5])
 for item in itr:

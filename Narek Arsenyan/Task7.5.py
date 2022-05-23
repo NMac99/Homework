@@ -53,4 +53,3 @@ try:
     print(isEven({5}))
 except TypeException as msg:
     print('Error: {msg}'.format(msg = msg))
-
