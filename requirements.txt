@@ -1,0 +1,5 @@
+appdirs==1.4.4
+EbookLib==0.17.1
+feedparser==6.0.10
+setuptools==61.2.0
+yattag==1.14.0
