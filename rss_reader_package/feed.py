@@ -5,22 +5,23 @@ exports Feed class
 """
 
 import json
-import rss_reader_package.utils.config as config
-import feedparser
-from rss_reader_package.link import Link
-from rss_reader_package.utils.exceptions import ConvertJSONError
+import utils.config as config
+from bs4 import BeautifulSoup
+from link import Link
+from utils.exceptions import ConvertJSONError
 
 
 class Feed:
     """Class which describes normalized Feed object"""
     def __init__(self,
-                 source_title: str or None,
-                 title: str or None,
-                 date: str or None,
-                 link: str or None,
-                 content: str or None,
-                 non_media_links: list[Link] or None,
-                 media_links: list[Link] or None
+                 source_title: str,
+                 source_url: str,
+                 title: str,
+                 date: str,
+                 link: str,
+                 content: str,
+                 non_media_links: list[Link],
+                 media_links: list[Link]
                  ):
         """
         The constructor of Feed class
@@ -36,81 +37,13 @@ class Feed:
         """
 
         self.source_title = source_title
+        self.source_url = source_url
         self.title = title
-        try:
-            self.date = date.replace("Z", "+00:00")
-        except Exception as e:
-            config.verbose_print(f"Feed date is not string ({e})", "warn")
-            self.date = date
+        self.date = date.replace("Z", "+00:00")
         self.link = link
         self.content = content
         self.non_media_links = non_media_links
         self.media_links = media_links
-
-    @staticmethod
-    def process_feed(feed: feedparser.util.FeedParserDict, source_title: str or None):
-        """
-        The static function for normalizing fetched feed
-
-        Args:
-            feed:           the raw feed object, that was fetched
-            source_title:   the source title of fetched news
-
-        Returns:
-            Feed: Feed type object, that is already normalized
-        """
-
-        feed_source_title = source_title
-        config.verbose_print("Scraping feed title", "bold")
-        try:
-            title = feed.title
-        except Exception as e:
-            config.verbose_print(f"Warning: Feed title not found ({e})", "warn")
-            title = None
-        config.verbose_print("Scraping publish date", "bold")
-        try:
-            date = feed.published
-        except Exception as e:
-            config.verbose_print(f"Warning: Publish date not found ({e})", "warn")
-            date = None
-        config.verbose_print("Scraping feed link", "bold")
-        try:
-            link = feed.link
-        except Exception as e:
-            config.verbose_print(f"Warning: Feed link not found ({e})", "warn")
-            link = None
-        config.verbose_print("Scraping feed content", "bold")
-        try:
-            content = feed.summary
-        except Exception as e:
-            config.verbose_print(f"Warning: Content not found ({e})", "warn")
-            content = None
-        config.verbose_print("Scraping non-media links", "bold")
-        try:
-            non_media_links = list(map(lambda l: Link(l.href, 'link'), feed.links))
-        except Exception as e:
-            config.verbose_print(f"Warning: Non-media links not found ({e})", "warn")
-            non_media_links = []
-        config.verbose_print("Scraping media links", "bold")
-        try:
-            media_links = list(map(lambda l: Link(l['url'], 'image'), feed.media_content))
-        except Exception as e:
-            config.verbose_print(f"Warning: Media links not found ({e})", "warn")
-            media_links = []
-
-        normalized_feed = Feed(
-            feed_source_title,
-            title,
-            date,
-            link,
-            content,
-            non_media_links,
-            media_links
-        )
-
-        config.verbose_print("Feed object created", "green")
-
-        return normalized_feed
 
     def to_json(self):
         """
@@ -146,12 +79,24 @@ class Feed:
         if formatted_links == "":
             formatted_links = None
 
+        content = BeautifulSoup(self.content, 'lxml')
+        feed_links = content.find_all("a", href = True)
+
+        for a in content.select("a"):
+            anchor_index = next((i for i, item in enumerate(feed_links) if item["href"] == a["href"]), None)
+            anchor_before = f"[link {anchor_index + 1}: "
+            anchor_after = f"][{anchor_index + 1}]"
+            a.insert_before(anchor_before)
+            a.insert_after(anchor_after)
+            a.unwrap()
+
+        formatted_content = content.get_text()
         formatted_feed = \
             f"Feed: {self.source_title}\n\n" + \
             f"Title: {self.title}\n" + \
             f"Date: {self.date}\n" + \
             f"Link: {self.link}\n\n" + \
-            f"{self.content}\n\n" + \
+            f"{formatted_content}\n\n" + \
             f"Links:\n{formatted_links}\n\n"
 
         return formatted_feed
@@ -173,6 +118,7 @@ class Feed:
         media_links = list(map(lambda l: Link(l["href"], l["link_type"]), converted_feed["media_links"]))
 
         return Feed(converted_feed["source_title"],
+                    converted_feed["source_url"],
                     converted_feed["title"],
                     converted_feed["date"],
                     converted_feed["link"],

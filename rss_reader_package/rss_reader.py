@@ -5,14 +5,14 @@ It handles parsing arguments, prints version, sets verbose mode, initializes Fee
 """
 import os
 import argparse
-import rss_reader_package.utils.config as config
-from rss_reader_package.utils.config import print
-from rss_reader_package.utils.version import __version__
-from rss_reader_package.feed_fetcher import FeedFetcher
-from rss_reader_package.cache_worker import CacheWorker
-from rss_reader_package.format_converter import FormatConverter
-from rss_reader_package.date import valid_date
-from rss_reader_package.utils.exceptions import WrongLimitError,\
+from utils import config
+from utils.config import print
+from utils.version import __version__
+from feed_fetcher import FeedFetcher
+from cache_worker import CacheWorker
+from format_converter import FormatConverter
+from date import valid_date
+from utils.exceptions import WrongLimitError,\
     ConvertJSONError,\
     WrongUrlError,\
     LinkWithNoSourceError,\

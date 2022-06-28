@@ -4,11 +4,12 @@ Module for CacheWorker class
 exports CacheWorker class
 """
 import os
-import rss_reader_package.utils.config as config
+import utils.config as config
 from appdirs import user_cache_dir
+from datetime import datetime
 from json import dumps, load
-from rss_reader_package.feed import Feed
-from rss_reader_package.utils.exceptions import CachedFeedNotFoundError
+from feed import Feed
+from utils.exceptions import CachedFeedNotFoundError
 
 
 class CacheWorker:
@@ -18,15 +19,19 @@ class CacheWorker:
     appauthor = config.appauthor
 
     @staticmethod
-    def store_feed_in_cache(date: str, source: str, json: str, feed_id: str):
+    def store_feed_in_cache(feed: Feed):
         """
+        Function that stores feed in cache files
+
         Args:
-            date:       date of publication of feed
-            source:     source of feed, from where it was fetched
-            json:       JSON string of converted feed
-            feed_id:    id of the feed
+            feed:   Feed object with all necessary data
         """
 
+        print("here")
+        date = str(datetime.strptime(feed.date, "%a, %d %b %Y %H:%M:%S %z").date())
+        print("here 2")
+        source = feed.source_url
+        feed_id = feed.link
         config.verbose_print("Getting user cache directory", "bold")
         cache_dir = user_cache_dir(CacheWorker.appname, CacheWorker.appauthor)
         if not os.path.exists(cache_dir):
@@ -69,9 +74,9 @@ class CacheWorker:
                         config.verbose_print("Feed not in cache. Storing feed in cache", "bold")
                         if len(cache[source]) > 10:
                             cache[source].pop(0)
-                        cache[source].append(json)
+                        cache[source].append(feed.to_json())
                 else:
-                    cache[source] = [json]
+                    cache[source] = [feed.to_json()]
                 config.verbose_print("Update date cache file", "bold")
                 cache_file.write(dumps(cache, indent=4))
         except Exception as e:
