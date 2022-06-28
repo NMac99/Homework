@@ -6,15 +6,15 @@ exports FormatConverter
 
 import os
 import uuid
-import rss_reader_package.utils.config as config
-from rss_reader_package.utils.config import print
+import utils.config as config
+from utils.config import print
 from appdirs import user_data_dir
 from yattag import Doc, indent
 from ebooklib import epub
 from datetime import datetime
-from rss_reader_package.feed import Feed
-from rss_reader_package.utils.count_files import count_files_by_type
-from rss_reader_package.utils.exceptions import NotSupportedConversionFormat
+from feed import Feed
+from utils.count_files import count_files_by_type
+from utils.exceptions import NotSupportedConversionFormat
 
 SUPPORTED_FORMATS = ["html", "epub"]
 
@@ -82,6 +82,7 @@ class FormatConverter:
                 with doc.tag('style', type='text/css'):
                     config.verbose_print("Applying css", "bold")
                     doc.asis(CSS)
+                doc.stag("meta", charset="UTF-8")
             with tag("body"):
                 config.verbose_print("Appending feeds to html", "bold")
                 for feed in feeds:
@@ -89,7 +90,7 @@ class FormatConverter:
         config.verbose_print("Saving html file", "bold")
         with open(os.path.join(destination_path, f"Feeds {html_files_count + 1}.html"), "w") as html_file:
             html_file.write(indent(doc.getvalue()))
-        config.verbose_print(f"Html file saved in {destination_path}", "green")
+        print(f"Html file saved in {destination_path}", "green")
 
     @staticmethod
     def feeds_to_epub(feeds: [Feed], destination_path: str):
@@ -137,7 +138,7 @@ class FormatConverter:
 
         config.verbose_print("Saving epub book", "bold")
         epub.write_epub(os.path.join(destination_path, new_file_name + ".epub"), book, {})
-        config.verbose_print(f"Epub book saved in {destination_path}", "green")
+        print(f"Epub book saved in {destination_path}", "green")
 
     @staticmethod
     def single_feed_to_html_content(feed: Feed, for_book: bool) -> str:
@@ -157,7 +158,7 @@ class FormatConverter:
         with tag("h3"):
             text(feed.title)
         with tag("p"):
-            text(str(datetime.fromisoformat(feed.date).__format__("%d.%m.%Y, %H:%M")))
+            text(str(datetime.strptime(feed.date, "%a, %d %b %Y %H:%M:%S %z").__format__("%d.%m.%Y, %H:%M")))
         doc.stag("br")
         if not for_book:
             with tag("div", id="feed-images-container"):
@@ -165,13 +166,15 @@ class FormatConverter:
                     text("No media was provided")
                 else:
                     for media_link in feed.media_links:
-                        doc.stag("img", src=media_link.href, klass="feed-image")
+                        if media_link.link_type == "image":
+                            doc.stag("img", src=media_link.href, klass="feed-image")
+                        if media_link.link_type == "audio":
+                            doc.stag("audio", controls=True, src=media_link.href)
+                        if media_link.link_type == "video":
+                            with tag("video", controls=True):
+                                doc.stag("source", src=media_link.href)
         doc.stag("br")
-        with tag("p"):
-            if feed.content is None:
-                text("No feed content in summary was provided")
-            else:
-                text(feed.content)
+        doc.asis(feed.content)
         doc.stag("br")
         with tag("a", href=feed.link, target="_blank"):
             text("Read full article")
@@ -182,10 +185,11 @@ class FormatConverter:
                 text("Related links:")
         with tag("div"):
             for i in range(0, len(feed.non_media_links)):
-                with tag("span"):
-                    text(f"[{i + 1}]")
-                with tag("a", href=feed.non_media_links[i].href, target="_blank"):
-                    text(feed.non_media_links[i].href)
+                with tag("div"):
+                    with tag("span"):
+                        text(f"[{i + 1}]")
+                    with tag("a", href=feed.non_media_links[i].href, target="_blank"):
+                        text(feed.non_media_links[i].href)
         if not for_book:
             for i in range(0, 5):
                 doc.stag("br")

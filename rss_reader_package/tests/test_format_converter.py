@@ -1,7 +1,6 @@
 import os
 import shutil
 import unittest
-import feedparser
 from rss_reader_package.format_converter import FormatConverter
 from rss_reader_package.mocks.raw_feed_mock import mock_feed_raw
 from rss_reader_package.feed import Feed
@@ -11,7 +10,7 @@ from rss_reader_package.utils.exceptions import NotSupportedConversionFormat
 
 
 class TestFormatConverter(unittest.TestCase):
-    parsed_feed = Feed.process_feed(feedparser.util.FeedParserDict(mock_feed_raw), None)
+    parsed_feed = Feed.json_to_feed(mock_feed_raw)
 
     def test_convert_feeds(self):
         user_dir = user_data_dir()

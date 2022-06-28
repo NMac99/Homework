@@ -1,11 +1,10 @@
 import unittest
-import feedparser
 from rss_reader_package.mocks.raw_feed_mock import mock_feed_raw
 from rss_reader_package.feed import Feed
 
 
 class TestFeed(unittest.TestCase):
-    parsed_feed = Feed.process_feed(feedparser.util.FeedParserDict(mock_feed_raw), None)
+    parsed_feed = Feed.json_to_feed(mock_feed_raw)
 
     def test_process_feed(self):
         self.assertIsNone(TestFeed.parsed_feed.source_title)

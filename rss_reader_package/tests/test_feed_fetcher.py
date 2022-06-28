@@ -1,6 +1,6 @@
 import unittest
-from feed_fetcher import FeedFetcher
-from exceptions import WrongLimitError, WrongUrlError
+from rss_reader_package.feed_fetcher import FeedFetcher
+from rss_reader_package.utils.exceptions import WrongLimitError, WrongUrlError
 
 
 class TestFeedFetcher(unittest.TestCase):

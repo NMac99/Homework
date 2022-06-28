@@ -4,7 +4,7 @@ Module for Link class
 exports Link class
 """
 
-from rss_reader_package.utils.exceptions import LinkWithNoSourceError
+from utils.exceptions import LinkWithNoSourceError
 
 
 class Link:

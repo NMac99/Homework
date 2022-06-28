@@ -48,7 +48,7 @@ setup(
     keywords=[],
 
     # List project dependencies:
-    install_requires=["feedparser", "appdirs", "yattag", "EbookLib"],
+    install_requires=["appdirs", "yattag", "EbookLib", "beautifulsoup4", "requests"],
 
     # https://pypi.org/classifiers/
     classifiers=[],
