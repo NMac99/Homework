@@ -71,7 +71,5 @@ class FeedFetcher:
                 formatted_feed = Feed(source_title, self.__source, title, date, link, raw_content, feed_links, media_links)
                 CacheWorker.store_feed_in_cache(formatted_feed)
                 self.feeds_formatted.append(formatted_feed)
-            with open("content.txt", "w") as f:
-                f.write(str(items))
         except Exception:
             raise WrongUrlError("Specified url is not rss type")
