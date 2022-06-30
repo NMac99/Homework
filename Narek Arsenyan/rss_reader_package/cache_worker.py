@@ -27,9 +27,7 @@ class CacheWorker:
             feed:   Feed object with all necessary data
         """
 
-        print("here")
         date = str(datetime.strptime(feed.date, "%a, %d %b %Y %H:%M:%S %z").date())
-        print("here 2")
         source = feed.source_url
         feed_id = feed.link
         config.verbose_print("Getting user cache directory", "bold")
