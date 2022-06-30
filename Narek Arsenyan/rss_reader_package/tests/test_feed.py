@@ -7,25 +7,24 @@ class TestFeed(unittest.TestCase):
     parsed_feed = Feed.json_to_feed(mock_feed_raw)
 
     def test_process_feed(self):
-        self.assertIsNone(TestFeed.parsed_feed.source_title)
-        self.assertEqual(TestFeed.parsed_feed.title, "Taiwanese F-16 fighter makes emergency landing in Hawaii")
-        self.assertEqual(TestFeed.parsed_feed.date, "2022-06-07T19:16:43Z")
+        self.assertEqual(TestFeed.parsed_feed.source_title, "The Daily")
+        self.assertEqual(TestFeed.parsed_feed.title, "Why Is It So Hard to Buy a House in America Right Now?")
+        self.assertEqual(TestFeed.parsed_feed.date, "Tue, 21 Jun 2022 09:50:00 +0000")
         self.assertEqual(TestFeed.parsed_feed.link,
-                         "https://news.yahoo.com/taiwanese-f-16-fighter-makes-191643064.html")
-        self.assertIsNone(TestFeed.parsed_feed.content)
-        self.assertEqual(len(TestFeed.parsed_feed.non_media_links), 0)
+                         "https://www.nytimes.com/the-daily")
+        self.assertEqual(len(TestFeed.parsed_feed.content), 1139)
+        self.assertEqual(len(TestFeed.parsed_feed.non_media_links), 3)
         self.assertEqual(TestFeed.parsed_feed.media_links[0].href,
-                         "https://s.yimg.com/uu/api/res/1.2/xEduvF_K_md_I0S4N_bKPA--~B/"
-                         "aD0zMzMzO3c9NTAwMDthcHBpZD15dGFjaHlvbg--/"
-                         "https://media.zenfs.com/en/ap.org/d6b6186493eecb5a8085e62472973496")
+                         "https://dts.podtrac.com/redirect.mp3/chrt.fm/track/8DB4DB/pdst.fm/e/nyt.simplecastaudio.com/"
+                         "03d8b493-87fc-4bd1-931f-8a8e9b945d8a/episodes/230797bf-6d47-4648-81b5-79750b8d8023/audio/"
+                         "128/default.mp3?aid=rss_feed&awCollectionId=03d8b493-87fc-4bd1-931f-8a8e9b945d8a&awEpisodeId="
+                         "230797bf-6d47-4648-81b5-79750b8d8023&feed=54nAGcIl")
 
     def test_to_json(self):
         self.assertEqual(type(TestFeed.parsed_feed.to_json()), str)
-        self.assertEqual(len(TestFeed.parsed_feed.to_json()), 540)
 
     def test_to_readable(self):
         self.assertEqual(type(TestFeed.parsed_feed.to_json()), str)
-        self.assertEqual(len(TestFeed.parsed_feed.to_json()), 374)
 
 
 unittest.main()

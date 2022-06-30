@@ -44,6 +44,7 @@
 ```json
 {
     "source_title": "Feed source title",
+    "source_url": "Feed source url",
     "title": "Title of the new",
     "date": "Publishing date of the new",
     "link": "Link of the new",
@@ -96,7 +97,7 @@ Inside `.json` file is JSON object where keys are fetched feeds' sources and val
 ```json
 {
     "https://timesofindia.indiatimes.com/rssfeedstopstories.cms": [
-        "{\n    \"source_title\": null,\n    \"title\": \"Presidential polls: Mamata invites 22 oppn CMs, leaders for joint meeting on June 15\",\n    \"date\": \"2022-06-11T16:22:36+05:30\",\n    \"link\": \"https://timesofindia.indiatimes.com/india/presidential-polls-mamata-invites-22-oppn-cms-leaders-for-joint-meeting-on-june-15/articleshow/92146582.cms\",\n    \"content\": \"With the Rajya Sabha results exposing dissension and lack of cohesion among opposition parties, West Bengal chief minister Mamata Banerjee on Saturday reached out to her counterparts and other leaders to participate in a meeting in Delhi on June 15 to discuss the upcoming presidential polls, which are scheduled for July 18.\",\n    \"non_media_links\": [\n        {\n            \"href\": \"https://timesofindia.indiatimes.com/india/presidential-polls-mamata-invites-22-oppn-cms-leaders-for-joint-meeting-on-june-15/articleshow/92146582.cms\",\n            \"link_type\": \"link\"\n        }\n    ],\n    \"media_links\": []\n}"
+        "{\n    \"source_title\": Times of India,\n    \"source_url\": \"https://timesofindia.indiatimes.com/rssfeedstopstories.cms\",\n    \"title\": \"Presidential polls: Mamata invites 22 oppn CMs, leaders for joint meeting on June 15\",\n    \"date\": \"2022-06-11T16:22:36+05:30\",\n    \"link\": \"https://timesofindia.indiatimes.com/india/presidential-polls-mamata-invites-22-oppn-cms-leaders-for-joint-meeting-on-june-15/articleshow/92146582.cms\",\n    \"content\": \"With the Rajya Sabha results exposing dissension and lack of cohesion among opposition parties, West Bengal chief minister Mamata Banerjee on Saturday reached out to her counterparts and other leaders to participate in a meeting in Delhi on June 15 to discuss the upcoming presidential polls, which are scheduled for July 18.\",\n    \"non_media_links\": [\n        {\n            \"href\": \"https://timesofindia.indiatimes.com/india/presidential-polls-mamata-invites-22-oppn-cms-leaders-for-joint-meeting-on-june-15/articleshow/92146582.cms\",\n            \"link_type\": \"link\"\n        }\n    ],\n    \"media_links\": []\n}"
     ]
 }
 ```
@@ -141,4 +142,3 @@ in user data directory.
 **For Windows 7:**
 
 >C:\Users\[USER]\AppData\Local\nmac99\RSSReader
-
